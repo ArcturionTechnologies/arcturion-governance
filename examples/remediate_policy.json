@@ -1,0 +1,39 @@
+{
+  "_doc": "Scoped opt-in for bounded auto-remediation. Only safe, reversible or additive classes belong here. Lossy operations (merges, retirements, canon or identity edits) never do; they stay with a human. Set a class enabled:false to hold it, or the top-level enabled:false to freeze every apply (plan still works). sla_days is the breach clock, counted from the finding's first sighting (seeded from file mtime).",
+  "enabled": false,
+  "max_actions_per_run": 200,
+  "owned_roots": ["$ARC_ROOT/agents/steward"],
+  "read_only_prefixes": ["$ARC_ROOT/agents/steward/canon"],
+  "protected_names": ["Private Notes"],
+  "classes": {
+    "drift-debris": {
+      "enabled": true, "sla_days": 7, "limit": 100, "scan_cap": 1000,
+      "fleet_delegate": true, "no_counterpart_action": "delete",
+      "desc": "Leftover copies (*.bak, *.old, *.orig, *.tmp, *~) and dangling symlinks. Diff against the live file, write the diff to the ledger, then really delete. Restore = the recorded diff re-applied. Only inside owned_roots; other agents' areas are delegated. Binary leftovers that differ are never auto-deleted. Set no_counterpart_action to human to hold orphans."
+    },
+    "stray-root": {
+      "enabled": true, "sla_days": 7, "limit": 50, "fleet_delegate": true,
+      "defer": {"queue.md": "held: a live writer owns this file"},
+      "desc": "A loose file at the governing agent's root is moved into the folder named by its own domain: + type: frontmatter. The folder must already exist; a file that doesn't say where it belongs goes to a human. Restore = move back."
+    },
+    "alarm-dedup": {
+      "enabled": true, "sla_days": 3, "limit": 10,
+      "desc": "A repeated alarm in the drift backlog or the governing inbox is collapsed into one line per distinct alarm with first seen / last seen / age / sighting count. Numbers are blanked when fingerprinting. Restore = patch -R with the recorded diff."
+    },
+    "frontmatter-stamp": {
+      "enabled": false, "type": "command", "limit": 200, "cwd": "$ARC_ROOT", "timeout": 300,
+      "dry": ["python3", "tools/stamp_frontmatter.py", "--json"],
+      "apply": ["python3", "tools/stamp_frontmatter.py", "--apply", "--limit", "{limit}"],
+      "desc": "Example command class: wrap an additive engine you already trust. {limit} is substituted from this policy."
+    }
+  },
+  "never_auto": [
+    "merges of near-duplicate notes (lossy)",
+    "retiring orphaned records (stage proposals only)",
+    "anything under read_only_prefixes",
+    "identity / canon / policy edits",
+    "creating new top-level folders",
+    "another agent's files: delegated to the owner, never fixed on their behalf",
+    "a finding being OLD is never a reason to move it out of this list"
+  ]
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template: Monday 07:00 scorecard: collect, index last week, send the card.
+     Fill in every __PLACEHOLDER__:
+       __PYTHON__    absolute path to python3 (3.10+)
+       __REPO_DIR__  absolute path to your arcturion-governance checkout
+       __ARC_ROOT__  absolute path to the agent workspace root
+       __CONFIG__    absolute path to governance.json
+       __LOG_DIR__   absolute path to a folder for logs
+     Then:
+       cp com.example.arcturion-governance.scorecard-weekly.plist.template ~/Library/LaunchAgents/com.example.arcturion-governance.scorecard-weekly.plist
+       launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.example.arcturion-governance.scorecard-weekly.plist
+     To change it later: bootout, edit, bootstrap. Don't edit a loaded plist in place.
+     Secrets (webhook URL, API keys) belong in your login environment or a wrapper
+     script, never in this file. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.example.arcturion-governance.scorecard-weekly</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__PYTHON__</string>
+    <string>-m</string>
+    <string>arcturion_governance</string>
+    <string>scorecard</string>
+    <string>weekly</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PYTHONPATH</key><string>__REPO_DIR__</string>
+    <key>ARC_ROOT</key><string>__ARC_ROOT__</string>
+    <key>ARC_GOVERNANCE_CONFIG</key><string>__CONFIG__</string>
+  </dict>
+  <key>WorkingDirectory</key><string>__ARC_ROOT__</string>
+  <key>StartCalendarInterval</key>
+  <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>7</integer><key>Minute</key><integer>0</integer></dict>
+  <key>RunAtLoad</key><false/>
+  <key>StandardOutPath</key><string>__LOG_DIR__/arcturion-governance-scorecard-weekly.out</string>
+  <key>StandardErrorPath</key><string>__LOG_DIR__/arcturion-governance-scorecard-weekly.err</string>
+</dict></plist>

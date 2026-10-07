@@ -1,0 +1,58 @@
+{
+  "self": "steward",
+  "human": "operator",
+  "state_dir": "$ARC_ROOT/.governance/state",
+  "ledger_dir": "$ARC_ROOT/governance/ledger",
+  "drift_queue": "$ARC_ROOT/governance/drift-backlog.md",
+  "agents": {
+    "steward": {
+      "home": "$ARC_ROOT/agents/steward",
+      "inbox": "messages.md"
+    },
+    "builder": {
+      "home": "$ARC_ROOT/agents/builder",
+      "inbox": "messages.md"
+    },
+    "research": {
+      "home": "$ARC_ROOT/agents/research",
+      "inbox": "messages.md"
+    }
+  },
+  "notify": {
+    "kind": "stdout"
+  },
+  "drift": {
+    "probes": [
+      {
+        "name": "leftovers",
+        "kind": "leftovers",
+        "section": "scan",
+        "red_at": 50
+      },
+      {
+        "name": "missing-created",
+        "kind": "missing-frontmatter",
+        "section": "memory",
+        "required": [
+          "created"
+        ],
+        "glob": "**/*.md",
+        "red_at": 25
+      },
+      {
+        "name": "stale-notes",
+        "kind": "stale-files",
+        "section": "memory",
+        "days": 120,
+        "red_at": 100
+      }
+    ]
+  },
+  "advisor": {
+    "enabled": false,
+    "endpoint": "https://judgment.example.com/v1/evaluate",
+    "model": "judge-1",
+    "api_key_env": "ADVISOR_API_KEY",
+    "cache_seconds": 300
+  }
+}

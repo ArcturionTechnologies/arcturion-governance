@@ -1,0 +1,15 @@
+{
+  "self": "steward",
+  "human": "operator",
+  "state_dir": "$ARC_ROOT/.governance/state",
+  "ledger_dir": "$ARC_ROOT/governance/ledger",
+  "drift_queue": "$ARC_ROOT/governance/drift-backlog.md",
+  "agents": {
+    "steward":  {"home": "$ARC_ROOT/agents/steward"},
+    "builder":  {"home": "$ARC_ROOT/agents/builder", "inbox": "inbox.md"},
+    "research": {"home": "$ARC_ROOT/agents/research", "aliases": ["scout"]}
+  },
+  "retired": {"oldbot": "builder"},
+  "notify": {"kind": "stdout"},
+  "remediate": {"policy": "$ARC_ROOT/remediate_policy.json"}
+}

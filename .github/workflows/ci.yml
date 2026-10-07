@@ -1,0 +1,26 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit tests
+        run: python3 -m unittest discover -s tests -t . -v
+      - name: Install and dry-run the demo workspace
+        run: |
+          pip install .
+          cd examples/demo
+          export ARC_ROOT="$PWD" ARC_GOVERNANCE_CONFIG="$PWD/governance.json" GOVERNANCE_NOTIFY=stdout
+          arcgov remediate plan
+          arcgov drift run
+          arcgov journal due
+          arcgov advisor --status
+          arcgov scorecard review plan

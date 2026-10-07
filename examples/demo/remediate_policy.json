@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "max_actions_per_run": 50,
+  "classes": {
+    "drift-debris": {"enabled": true, "sla_days": 7, "limit": 20, "fleet_delegate": true},
+    "stray-root": {"enabled": true, "sla_days": 7, "limit": 20, "fleet_delegate": true},
+    "alarm-dedup": {"enabled": true, "sla_days": 3, "limit": 5}
+  },
+  "never_auto": ["identity / canon edits", "another agent's files"]
+}

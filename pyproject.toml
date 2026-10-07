@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arcturion-governance"
+version = "0.1.0"
+description = "Governance tools for a workspace of AI agents: safe auto-fix, drift sentinel, weekly scorecard, decision journal, second-opinion advisor"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Arcturion Technologies"}]
+
+[project.scripts]
+arcgov = "arcturion_governance.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["arcturion_governance*"]

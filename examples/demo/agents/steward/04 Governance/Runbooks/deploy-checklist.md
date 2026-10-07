@@ -1,0 +1,8 @@
+---
+created: 2026-01-05
+---
+
+# Deploy checklist
+
+1. Run the tests.
+2. Tag the release.
